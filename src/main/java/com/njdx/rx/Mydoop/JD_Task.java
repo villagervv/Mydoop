@@ -18,10 +18,10 @@ public class JD_Task {
 		
 		Configuration conf = new Configuration();
 		
-		conf.set("mapreduce.job.queuename", "Tags_MBL");
+		conf.set("mapreduce.job.queuename", "rtbqueue");
 	    conf.set("mapreduce.output.textoutputformat.separator", "^"); //key, value之间的分隔符
 	    
-	    Job job = Job.getInstance(conf, "ML_JD"); //任务名
+	    Job job = Job.getInstance(conf, "ML_WX"); //任务名
 	    
 		//控制map和reduce的输出类型<K,V>
 	    job.setOutputKeyClass(Text.class);

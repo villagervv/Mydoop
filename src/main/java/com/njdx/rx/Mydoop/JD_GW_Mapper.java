@@ -1,6 +1,8 @@
 package com.njdx.rx.Mydoop;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.hadoop.io.Text;
@@ -45,6 +47,7 @@ public class JD_GW_Mapper extends Mapper<Object, Text, Text, Text>{
 			String target_referer = "http://mp.weixin.qq.com/s?__biz";  
 			String target_video = "http://mp.weixin.qq.com/mp/videoplayer?";
             String[] temp = line.split("\\|", -1);
+            String result = null;
 			if(temp.length == 12){
 				String uid = temp[0]; //用户账号
 	            byte[] c = decoder.decodeBuffer(temp[7]);
@@ -55,7 +58,7 @@ public class JD_GW_Mapper extends Mapper<Object, Text, Text, Text>{
 	    		byte[] r = decoder.decodeBuffer(temp[8]);
 	    		String referer = new String(r);//Referrer字段
 	    		
-	    		if(referer.contains(target_referer)||referer.contains(target_video)){/*
+	    		if(referer.contains(target_referer)){/*
 					int startIndex = url.lastIndexOf("/");
 					int endIndex = url.indexOf(".html");
 					if(startIndex != -1 && endIndex != -1){
@@ -64,7 +67,14 @@ public class JD_GW_Mapper extends Mapper<Object, Text, Text, Text>{
 		    				context.write(new Text(uid), new Text(result));
 		    			}
 					}*/
-	    			String result = referer;
+
+	    			Pattern p = Pattern.compile("http:\\/\\/mp\\.weixin\\.qq\\.com\\/s\\?\\_\\_biz=([a-zA-Z0-9]{14})==\\S*");
+	  				Matcher m = p.matcher(referer);
+	  				
+	  				while(m.find()){
+		    			 result = m.group(1);
+	  				}
+	  				
 	    			if(result != null){
 	    				context.write(new Text(uid), new Text(result));
 	    			}

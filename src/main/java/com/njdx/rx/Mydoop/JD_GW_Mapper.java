@@ -47,7 +47,9 @@ public class JD_GW_Mapper extends Mapper<Object, Text, Text, Text>{
 //	    	String target_host = "item.jd.com";
 			String target_referer = "http://mp.weixin.qq.com/s?__biz";  
 			String target_video = "http://mp.weixin.qq.com/mp/videoplayer?";
-			String target_host = "weicoapi.weico.cc";
+			String target_host_weico = "weicoapi.weico.cc";
+			String target_host_weibo = "api.weibo.cn";
+			String target_weixin_api = "long.open.weixin.qq.com";
 			
             String[] temp = line.split("\\|", -1);
             String result = null;
@@ -60,6 +62,10 @@ public class JD_GW_Mapper extends Mapper<Object, Text, Text, Text>{
 	    		
 	    		byte[] r = decoder.decodeBuffer(temp[8]);
 	    		String referer = new String(r);//Referrer字段
+	    		
+	    		
+	    		byte[] cook = decoder.decodeBuffer(temp[10]);
+	    		String cookie = new String(cook);//Referrer字段
 	    		
 	    		
 	    		///20170419  提取微信的部分 
@@ -88,7 +94,7 @@ public class JD_GW_Mapper extends Mapper<Object, Text, Text, Text>{
 	    		
 	    		////20170420  提取微博用户 weico客户端信息
 	    		
-	    		if(host.contains(target_host)&&url.contains("portal.php?")){/*
+	    		if(/*(host.contains(target_host_weico)&&url.contains("portal.php?"))||*/(url.contains(target_host_weibo)&&url.contains("uid"))){/*
 					int startIndex = url.lastIndexOf("/");
 					int endIndex = url.indexOf(".html");
 					if(startIndex != -1 && endIndex != -1){
@@ -102,6 +108,22 @@ public class JD_GW_Mapper extends Mapper<Object, Text, Text, Text>{
 	    				context.write(new Text(uid), new Text(result));
 	    			
 	    		}
+	    		
+//	    		if((host.contains(target_weixin_api))){/*
+//					int startIndex = url.lastIndexOf("/");
+//					int endIndex = url.indexOf(".html");
+//					if(startIndex != -1 && endIndex != -1){
+//						String result = url.substring(startIndex+1, endIndex);
+//		    			if(result != null){
+//		    				context.write(new Text(uid), new Text(result));
+//		    			}
+//					}*/
+//
+//	    				result=cookie;
+//	    				context.write(new Text(uid), new Text(result));
+//	    			
+//	    		}
+	    		
 	    		
 			}    
 		//需要根据具体情况捕获异常，应避免以下写法

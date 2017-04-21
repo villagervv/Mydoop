@@ -33,7 +33,7 @@ public class JD_Task {
 	    job.setMapperClass(JD_GW_Mapper.class); //Map类
 	    job.setReducerClass(JD_GW_Reducer.class); //Reduce类
 	    
-//	    job.setNumReduceTasks(8);
+	    job.setNumReduceTasks(10);
 		//setInputFormatClass定义的InputFormat将输入的数据集分割成小数据
 	    job.setInputFormatClass(TextInputFormat.class);
 		//输出数据格式
